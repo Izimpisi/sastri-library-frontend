@@ -1,11 +1,11 @@
 import React from 'react'
 
 function page() {
-  return (
-    <div>
-      mthiya
-    </div>
-  )
+    return (
+        <h1>
+            Loans
+        </h1>
+    )
 }
 
 export default page

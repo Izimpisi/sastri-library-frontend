@@ -6,7 +6,7 @@ export default async function DashboardLayout({
 }) {
 
     return (
-        <main>
+        <main className="pt-20">
             {/* Include shared UI here e.g. a header or sidebar */}
             <DrawerAppBar />
             {children}

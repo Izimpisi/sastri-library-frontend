@@ -10,10 +10,11 @@ import {
     Box,
     Typography,
     Container,
-    CssBaseline,
+    Card, CardMedia, CardContent,
 } from '@mui/material';
 import axiosInstance from '@/lib/axiosInstance';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 // Yup schema for validation
 const schema = yup.object({
@@ -37,7 +38,7 @@ const schema = yup.object({
 
 const SignUpPage = () => {
     const router = useRouter();
-    
+
     const {
         register,
         handleSubmit,
@@ -58,18 +59,45 @@ const SignUpPage = () => {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
+        <Container component="main" sx={{ display: 'flex', width: "100%", minHeight: "100vh", alignItems: 'center' }}>
+            <Card sx={{
+                maxWidth: 345, margin: 'auto', boxShadow: 3, flexGrow: 1, display: {
+                    xs: 'none', // Hide on extra-small screens (mobile)
+                    sm: 'none', // Hide on small screens (tablets)
+                    md: 'none', // Hide on medium screens (like small laptops)
+                    lg: 'block', // Visible on large screens and above
+                }
+            }}>
+                {/* Image inside the Card */}
+                <CardMedia
+                    component="img"
+                    height="140"
+                    image="/sastribadge.webp" // Example image URL
+                    alt="Random Image"
+                />
+
+                {/* Text Content below the Image */}
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        Sastri College.
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Sastri College is co-educational state secondary school with learners from grade 8 to grade 12. The school is located on the periphery of the central business district of the City of Durban. It is a school rich in tradition and respected for its high academic achievement.
+                    </Typography>
+                </CardContent>
+            </Card>
             <Box
                 sx={{
                     marginTop: 8,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    flexGrow: 2,
+                    paddingInline: "15px"
                 }}
             >
                 <Typography component="h1" variant="h5">
-                    Sign Up
+                    Sign Up for SLMS
                 </Typography>
                 <Box
                     component="form"
@@ -135,6 +163,11 @@ const SignUpPage = () => {
                     >
                         Sign Up
                     </Button>
+                    <Link href="/auth/login">
+                        <Typography sx={{textDecoration: "underline"}}>
+                            Aready have an account? Log in
+                        </Typography>
+                    </Link>
                 </Box>
             </Box>
         </Container>

@@ -25,6 +25,7 @@ import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 
 
 import axiosInstance from '@/lib/axiosInstance';
+import Link from 'next/link';
 
 
 export default function DrawerAppBar() {
@@ -32,6 +33,7 @@ export default function DrawerAppBar() {
   const [state, setState] = React.useState({
     left: false,
   });
+  
   const [userProfile, setUserProfile] = React.useState({});
 
   React.useEffect(() => {
@@ -81,28 +83,32 @@ export default function DrawerAppBar() {
     >
 
       <List>
-        {['New Books', 'Categories',].map((text, index) => (
-          <ListItem disablePadding key={text}>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <Badge badgeContent={4} color="primary"><MailIcon /></Badge>}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+        {[{ text: 'New Books', url: "/home/new-books" }, { text: 'Categories', url: "/home/categories" }].map((page, index) => (
+          <Link href={page.url} key={page.text}>
+            <ListItem disablePadding >
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <Badge badgeContent={4} color="primary"><MailIcon /></Badge>}
+                </ListItemIcon>
+                <ListItemText primary={page.text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider />
       <List>
-        {['Overdue', 'Book Loans', 'Book Reservations', 'History'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+        {[{ text: 'Overdue', url: "/home/overdue" }, { text: 'Book Loans', url: "/home/loans" }, { text: 'Book Reservations', url: "/home/reservations" }, { text: 'History', url: "/home/history" }].map((page, index) => (
+          <Link href={page.url} key={page.text}>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={page.text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
     </Box>
@@ -111,7 +117,7 @@ export default function DrawerAppBar() {
   return (
     <div>
       <React.Fragment>
-        <AppBar component="nav">
+        <AppBar component="nav" color="secondary">
           <Toolbar>
             <IconButton onClick={toggleDrawer(true)} color="inherit"
               aria-label="open drawer">
