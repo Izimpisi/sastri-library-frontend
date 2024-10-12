@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
+
+.animated-text-landing {
+    font-family: "Afacad Flux", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+        "slnt" 0;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    text-align: center;
+    margin: 100px 0 40px;
+    color: #fff;
+    letter-spacing: 2px;
+    flex-grow: 1;
+}
+
+.main-landing-main {
+    background: linear-gradient(135deg, #ecd0db, #ffcc00);
+
+}
+
+.spin-logo-class {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 10px;
+    max-height: 178px;
+    position: relative;
+    opacity: .7;
+}
+
+.background-image-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/library6.png");
+    background-size: contain;
+    background-color: #fff;
+    filter: blur(3px);
+    z-index: -1;
+}
+
+.spin-logo-class .svg-carrier-div {
+    align-self: center;
+    flex-grow: 2;
+}
+
+.spin-logo-class .box {
+    width: 100;
+    height: 100;
+    border-radius: "50%";
+    background-color: #ffffff;
+    margin: "20px auto";
+}
+
+.home-cover-wrapper-div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.home-cover-buttons {
+    padding-left: 10px;
+}
