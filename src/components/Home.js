@@ -2,7 +2,7 @@
 import "./Home.css";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Box } from "@mui/material";
 import PersonIcon from '@mui/icons-material/Person';
 import { useRouter } from "next/navigation";
 
@@ -49,27 +49,18 @@ export default function Home() {
                         style={{ borderRadius: "inherit" }} // Maintains aspect ratio
                     />
                 </motion.div>
-                <div className="svg-carrier-div"><svg id="topicsvg" viewbox="0 0 100 20" width="200px">
-                    <defs>
-                        <linearGradient id="gradient">
-                            <stop color="#000" />
-                        </linearGradient>
-                        <pattern id="wave" x="0" y="-0.5" width="100%" height="100%" patternUnits="userSpaceOnUse">
-                            <path id="wavePath" d="M-40 9 Q-30 7 -20 9 T0 9 T20 9 T40 9 T60 9 T80 9 T100 9 T120 9 V20 H-40z" mask="url(#mask)" fill="url(#gradient)">
-                                <animateTransform attributeName="transform"
-                                    begin="0s"
-                                    dur="1.5s"
-                                    type="translate"
-                                    from="0,0"
-                                    to="40,0"
-                                    repeatCount="indefinite" />
-                            </path>
-                        </pattern>
-                    </defs>
-                    <text text-anchor="middle" width="200px" font-weight="bold" x="44" y="12" font-size="5" fill="white" fill-opacity="0.1">Sastri Library Management System</text>
-                    <text text-anchor="middle" font-weight="bold" x="44" y="12" font-size="5" fill="url(#wave)" fill-opacity="1">Sastri Library Management System</text>
-                </svg>
-                </div>
+                <Box className="svg-carrier-div" sx={{display: {
+                    xs: 'none', // Hide on extra-small screens (mobile)
+                    sm: 'none', // Hide on small screens (tablets)
+                    md: 'none', // Hide on medium screens (like small laptops)
+                    lg: 'block', // Visible on large screens and above
+                }}}>
+                    <svg id="logo">
+                        <text x="50%" y="60%" fill="transparent" textAnchor="middle">
+                            Sastri Library Management System
+                        </text>
+                    </svg>
+                </Box>
                 <div className="background-image-div">
                 </div>
             </div>
