@@ -1,9 +1,10 @@
+import Loan from '@/components/Home/Loans/Loans'
 import React from 'react'
 
 function page() {
     return (
         <h1>
-            Loans
+            <Loan />
         </h1>
     )
 }

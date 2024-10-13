@@ -16,12 +16,12 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
-import { Avatar } from '@mui/material';
+import { Stack, Chip } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
 import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
+import LockIcon from '@mui/icons-material/Lock';
 
 
 import axiosInstance from '@/lib/axiosInstance';
@@ -33,7 +33,7 @@ export default function DrawerAppBar() {
   const [state, setState] = React.useState({
     left: false,
   });
-  
+
   const [userProfile, setUserProfile] = React.useState({});
 
   React.useEffect(() => {
@@ -82,7 +82,7 @@ export default function DrawerAppBar() {
       onKeyDown={toggleDrawer(false)}
     >
 
-      <List>
+      {userProfile && userProfile.role == "Student" ? <><List>
         {[{ text: 'New Books', url: "/home/new-books" }, { text: 'Categories', url: "/home/categories" }].map((page, index) => (
           <Link href={page.url} key={page.text}>
             <ListItem disablePadding >
@@ -96,28 +96,56 @@ export default function DrawerAppBar() {
           </Link>
         ))}
       </List>
-      <Divider />
-      <List>
-        {[{ text: 'Overdue', url: "/home/overdue" }, { text: 'Book Loans', url: "/home/loans" }, { text: 'Book Reservations', url: "/home/reservations" }, { text: 'History', url: "/home/history" }].map((page, index) => (
-          <Link href={page.url} key={page.text}>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={page.text} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
-      </List>
+        <Divider />
+        <List>
+          {[{ text: 'Overdue', url: "/home/overdue" }, { text: 'Book Loans', url: "/home/loans" }, { text: 'Book Reservations', url: "/home/reservations" }, { text: 'History', url: "/home/history" }].map((page, index) => (
+            <Link href={page.url} key={page.text}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={page.text} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List></> : <><List>
+          {[{ text: 'Manage Books', url: "/home/manage-books" }, { text: 'Categories', url: "/home/categories" }].map((page, index) => (
+            <Link href={page.url} key={page.text}>
+              <ListItem disablePadding >
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <Badge badgeContent={4} color="primary"><MailIcon /></Badge>}
+                  </ListItemIcon>
+                  <ListItemText primary={page.text} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {[{ text: 'Overdue Loans', url: "/home/overdue-loans" }, { text: 'Pending Loans', url: "/home/pending-loans" }, { text: 'Pending Reservations', url: "/home/pending-reservations" }, { text: 'Payment', url: "/home/payments" },  { text: 'Students', url: "/home/students" }].map((page, index) => (
+            <Link href={page.url} key={page.text}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={page.text} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List></>}
     </Box>
   );
 
   return (
     <div>
       <React.Fragment>
-        <AppBar component="nav" color="secondary">
+        <AppBar component="nav" sx={{ backgroundColor: "#a6e6e2d4", color: 'rgb(126 132 203)' }} >
           <Toolbar>
             <IconButton onClick={toggleDrawer(true)} color="inherit"
               aria-label="open drawer">
@@ -134,6 +162,11 @@ export default function DrawerAppBar() {
             <Typography component="span" sx={{ paddingTop: 1, display: { xs: 'block', sm: 'none' } }} gutterBottom>
               {userProfile.firstName + " " + userProfile.lastName}
             </Typography>
+
+            <Stack direction="row" spacing={1}>
+              {userProfile && userProfile.role == "Student" ? <Chip icon={<AccountCircleOutlinedIcon />} color="#a47bae" label={userProfile.role} /> :
+                <Chip icon={<LockIcon fontSize='small' />} color="#4979d2b8" label={userProfile.role+"strator."} />}
+            </Stack>
 
             <div className='flex items-center py-2' style={{ marginLeft: 'auto' }}>
               <IconButton>

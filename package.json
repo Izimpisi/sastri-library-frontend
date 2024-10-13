@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
+    "@mui/x-data-grid": "^7.20.0",
     "axios": "^1.7.5",
     "framer-motion": "^11.9.0",
     "next": "^14.2.13",
