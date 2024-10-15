@@ -1,7 +1,7 @@
 
 import React from "react"
 import Image from 'next/image'
-import HomeClient from "@/components/Home/Home"
+import HomeClient from "../../components/Home/Home"
 
 export default function Home() {
     return (

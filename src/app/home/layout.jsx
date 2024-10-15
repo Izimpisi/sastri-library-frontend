@@ -1,5 +1,4 @@
-import DrawerAppBar from "@/components/DrawerAppBar"
-
+import DrawerAppBar from "../../components/DrawerAppBar"
 
 export default async function DashboardLayout({
     children, 

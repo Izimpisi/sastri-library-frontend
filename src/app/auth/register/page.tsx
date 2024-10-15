@@ -12,7 +12,7 @@ import {
     Container,
     Card, CardMedia, CardContent,
 } from '@mui/material';
-import axiosInstance from '@/lib/axiosInstance';
+import axiosInstance from '../../../lib/axiosInstance';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -29,6 +29,10 @@ const schema = yup.object({
     password: yup
         .string()
         .min(6, 'Password must be at least 6 characters')
+        .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+        .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+        .matches(/\d/, 'Password must contain at least one number')
+        .matches(/[!@#$%^&*(),.?":{}|<>]/,'Password must contain at least one special character')
         .required('Password is required'),
     confirmPassword: yup
         .string()

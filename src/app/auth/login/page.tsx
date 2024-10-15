@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
-import axiosInstance from '@/lib/axiosInstance';
+import axiosInstance from '../../../lib/axiosInstance';
 import Link from 'next/link';
 import { Button, TextField, Box, Typography, Container, CssBaseline, Card, CardMedia, CardContent } from '@mui/material';
 
@@ -15,23 +15,28 @@ const schema = yup.object({
     password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
 }).required();
 
-const LoginPage = () => {
+type FormData = {
+    email: string;
+    password: string;
+};
+
+const LoginPage: React.FC = () => {
     const router = useRouter();
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({
+    } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data) => {
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
         console.log('Login Data:', data);
         try {
             const response = await axiosInstance.post('/Account/login', data);
             console.log(response);
-            router.push("/home")
+            router.push("/home");
         } catch (error) {
             console.log("error", error);
         }
@@ -99,7 +104,7 @@ const LoginPage = () => {
                         Login
                     </Button>
                     <Link href="/auth/register">
-                        <Typography sx={{textDecoration: "underline"}}>
+                        <Typography sx={{ textDecoration: "underline" }}>
                             Don't have an account? Sign Up
                         </Typography>
                     </Link>

@@ -1,12 +1,13 @@
 import React from "react"
 import Image from 'next/image'
+import LibraryBooks from "@/components/Home/Manage-Books/LibraryBooks"
 
 export default function page() {
 
     return (
-        <h1>
-            Book Update Log
-        </h1>
+        <main className="main-manage-books">
+            <LibraryBooks />
+        </main>
     )
 }
 

@@ -1,11 +1,11 @@
-import Loan from '@/components/Home/Loans/Loans'
 import React from 'react'
+import Loan from '../../../components/Home/Loans/Loans'
 
 function page() {
     return (
-        <h1>
+        <main className="main-loan-books">
             <Loan />
-        </h1>
+        </main>
     )
 }
 
