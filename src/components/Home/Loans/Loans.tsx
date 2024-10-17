@@ -15,10 +15,12 @@ import {
   Paper,
   Breadcrumbs
 } from '@mui/material';
+import axiosInstance from '../../../lib/axiosInstance';
+import NewLoanDialog from './NewLoanDialog';
 
 // Define the row data type
 interface LoanRow {
-  id?: number;
+  loanId?: number;
   loanDate: string; // Use string to hold date in 'YYYY-MM-DD' format
   dueDate: string;
   returnDate?: string; // Optional field
@@ -30,29 +32,32 @@ interface LoanRow {
 
 // Loan columns definition for DataGrid
 const columns: GridColDef[] = [
-  { field: 'isbn', headerName: 'ISBN', width: 70 },
-  { field: 'bookTitle', headerName: 'Book Title', width: 150 },
-  { field: 'author', headerName: 'Author', width: 130 },
+  { field: 'isbn', headerName: 'ISBN', width: 130 },
+  { field: 'title', headerName: 'Book Title', width: 200 },
+  { field: 'author', headerName: 'Author', width: 150 },
   {
     field: 'loanDate',
     headerName: 'Loan Date',
     width: 120,
     type: 'date',
-    valueGetter: (params: any) => new Date(params?.row?.loanDate), // Convert to Date object
+    valueGetter: (params: GridRenderCellParams) =>
+      params?.value ? new Date(params.value.loanDate) : null, // Convert to Date object
   },
   {
     field: 'dueDate',
     headerName: 'Due Date',
     width: 120,
     type: 'date',
-    valueGetter: (params: any) => new Date(params?.row?.dueDate), // Convert to Date object
+    valueGetter: (params: GridRenderCellParams) =>
+      params?.value ? new Date(params.value.dueDate) : null, // Convert to Date object
   },
   {
     field: 'returnDate',
     headerName: 'Return Date',
     width: 120,
     type: 'date',
-    valueGetter: (params: any) => params?.row?.returnDate ? new Date(params?.row?.returnDate) : null, // Convert to Date object, handle optional field
+    valueGetter: (params: GridRenderCellParams) =>
+      params?.value ? new Date(params.value.returnDate) : null, // Convert to Date object, handle optional field
   },
   {
     field: 'approved',
@@ -87,7 +92,7 @@ const columns: GridColDef[] = [
 // Placeholder data for loans
 const rows: LoanRow[] = [
   {
-    id: 1,
+    loanId: 1,
     isbn: 1,
     bookTitle: 'A Game of Thrones',
     author: 'George R. R. Martin',
@@ -96,7 +101,7 @@ const rows: LoanRow[] = [
     returnDate: '2024-10-10'
   },
   {
-    id: 2,
+    loanId: 2,
     isbn: 2,
     bookTitle: 'The Catcher in the Rye',
     author: 'J.D. Salinger',
@@ -110,7 +115,21 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 // Main Loan Component
 const Loan: React.FC = () => {
+  const [loans, setLoans] = React.useState<LoanRow[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
+
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
+  const handleOpen = () => setDialogOpen(true);
+  const handleClose = () => setDialogOpen(false);
+
+  const handleCreateLoan = (loanData) => {
+    console.log('New Loan Created:', loanData);
+    // Add logic to save loanData to the backend
+  };
+
 
   const handleEdit = (id: number) => {
     console.log(`Edit loan with id: ${id}`);
@@ -121,6 +140,21 @@ const Loan: React.FC = () => {
     console.log(`Delete loan with id: ${id}`);
     // Implement delete logic here
   };
+
+  React.useEffect(() => {
+    const fetchLoans = async () => {
+      try {
+        const response = await axiosInstance.get<LoanRow[]>('/loan');
+        setLoans(response.data); // Update state with fetched loans
+      } catch (err: any) {
+        setError(err.message || 'Failed to fetch loans');
+      } finally {
+        setLoading(false); // Stop loading spinner
+      }
+    };
+
+    fetchLoans();
+  }, []);
 
   return (
     <Container
@@ -142,26 +176,36 @@ const Loan: React.FC = () => {
           Book Loans
         </Link>
       </Breadcrumbs>
-      <DataTable />
+      <DataTable loans={loans} />
       <Button
         className="mt-2"
         endIcon={<AddIcon />}
         variant="outlined"
         color="primary"
+        onClick={handleOpen}
       >
         New Loan
       </Button>
+      <NewLoanDialog
+        open={dialogOpen}
+        onClose={handleClose}
+        onCreate={handleCreateLoan}
+      />
     </Container>
   );
 };
 
-// DataTable Component
-export const DataTable: React.FC = () => {
+interface DataTableProps {
+  loans: LoanRow[];
+}
+
+export const DataTable: React.FC<DataTableProps> = ({ loans }) => {
   return (
     <Paper sx={{ height: 400, width: '100%', backgroundColor: '#fff0' }}>
       <DataGrid
-        rows={rows}
+        rows={loans}
         columns={columns}
+        getRowId={(row) => row.loanId}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}

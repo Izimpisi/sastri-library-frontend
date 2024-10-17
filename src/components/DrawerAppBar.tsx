@@ -55,7 +55,12 @@ export default function DrawerAppBar() {
 
       try {
         const response = await fetchMe();
-        setUserProfile(response);
+        setUserProfile(prevState => {
+          if(response.role === "Admin") {
+            response.role = "Administrator"
+          }
+          return response
+        });
         sessionStorage.setItem('userInfo', JSON.stringify(response));
       } catch (error) {
         console.error('Failed to fetch profile:', error);
@@ -185,7 +190,7 @@ export default function DrawerAppBar() {
 
   return (
     <div>
-      <AppBar component="nav" sx={{ backgroundColor: '#a6e6e2d4', color: 'rgb(126 132 203)' }}>
+      <AppBar component="nav" sx={{ backgroundColor: '#a6e6e2d4', color: 'rgb(16 4 4)' }}>
         <Toolbar>
           <IconButton onClick={toggleDrawer(true)} color="inherit" aria-label="open drawer">
             <svg
@@ -221,20 +226,20 @@ export default function DrawerAppBar() {
             ) : (
               <Chip
                 icon={<LockIcon fontSize="small" />}
-                label={`${userProfile.role}strator`}
+                label={`${userProfile.role}`}
               />
             )}
           </Stack>
 
           <IconButton>
-            <NotificationsActiveOutlinedIcon sx={{ color: 'white' }} />
+            <NotificationsActiveOutlinedIcon sx={{ color: 'black' }} />
           </IconButton>
           <IconButton>
-            <MailOutlinedIcon sx={{ color: 'white' }} />
+            <AccountCircleOutlinedIcon sx={{ color: 'black' }} />
           </IconButton>
-          <IconButton>
-            <AccountCircleOutlinedIcon sx={{ color: 'white' }} />
-          </IconButton>
+          <Typography component="span" sx={{ paddingTop: 1 }} gutterBottom>
+              {userProfile.firstName + " " + userProfile.lastName}
+            </Typography>
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={state.left} onClose={toggleDrawer(false)}>
