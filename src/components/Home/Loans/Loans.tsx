@@ -28,6 +28,7 @@ interface LoanRow {
   author: string;
   isbn?: number;
   approved?: boolean;
+  message?: string;
 }
 
 // Loan columns definition for DataGrid
@@ -40,24 +41,27 @@ const columns: GridColDef[] = [
     headerName: 'Loan Date',
     width: 120,
     type: 'date',
-    valueGetter: (params: GridRenderCellParams) =>
-      params?.value ? new Date(params.value.loanDate) : null, // Convert to Date object
+    valueGetter: (params: any) => {
+      return params ? new Date(params) : null;
+    },
   },
   {
     field: 'dueDate',
     headerName: 'Due Date',
     width: 120,
     type: 'date',
-    valueGetter: (params: GridRenderCellParams) =>
-      params?.value ? new Date(params.value.dueDate) : null, // Convert to Date object
+    valueGetter: (params: any) => {
+      return params ? new Date(params) : null;
+    },
   },
   {
     field: 'returnDate',
     headerName: 'Return Date',
     width: 120,
     type: 'date',
-    valueGetter: (params: GridRenderCellParams) =>
-      params?.value ? new Date(params.value.returnDate) : null, // Convert to Date object, handle optional field
+    valueGetter: (params: any) => {
+      return params ? new Date(params) : null;
+    },
   },
   {
     field: 'approved',
@@ -66,27 +70,33 @@ const columns: GridColDef[] = [
     type: 'boolean',
   },
   {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    width: 90,
-    renderCell: (params: GridRenderCellParams) => (
-      <Stack direction="row" spacing={1}>
-        <IconButton
-          color="primary"
-        //onClick={() => handleEdit(params.row.id)}
-        >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          color="error"
-        //onClick={() => handleDelete(params.row.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Stack>
-    ),
-  },
+    field: 'message',
+    headerName: 'Status',
+    width: 120
+  }
+  // ,
+  // {
+  //   field: 'actions',
+  //   headerName: 'Actions',
+  //   sortable: false,
+  //   width: 90,
+  //   renderCell: (params: GridRenderCellParams) => (
+  //     <Stack direction="row" spacing={1}>
+  //       <IconButton
+  //         color="primary"
+  //       //onClick={() => handleEdit(params.row.id)}
+  //       >
+  //         <EditIcon />
+  //       </IconButton>
+  //       <IconButton
+  //         color="error"
+  //       //onClick={() => handleDelete(params.row.id)}
+  //       >
+  //         <DeleteIcon />
+  //       </IconButton>
+  //     </Stack>
+  //   ),
+  // },
 ];
 
 // Placeholder data for loans

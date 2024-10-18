@@ -96,7 +96,6 @@ export default function DrawerAppBar() {
           <List>
             {[
               { text: 'New Books', url: '/home/new-books' },
-              { text: 'Categories', url: '/home/categories' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>
                 <ListItem disablePadding>
@@ -122,7 +121,6 @@ export default function DrawerAppBar() {
               { text: 'Overdue', url: '/home/overdue' },
               { text: 'Book Loans', url: '/home/loans' },
               { text: 'Book Reservations', url: '/home/reservations' },
-              { text: 'History', url: '/home/history' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>
                 <ListItem disablePadding>
@@ -142,7 +140,6 @@ export default function DrawerAppBar() {
           <List>
             {[
               { text: 'Manage Books', url: '/home/manage-books' },
-              { text: 'Categories', url: '/home/categories' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>
                 <ListItem disablePadding>
@@ -165,10 +162,10 @@ export default function DrawerAppBar() {
           <Divider />
           <List>
             {[
-              { text: 'Overdue Loans', url: '/home/overdue-loans' },
-              { text: 'Pending Loans', url: '/home/pending-loans' },
-              { text: 'Pending Reservations', url: '/home/pending-reservations' },
-              { text: 'Payment', url: '/home/payments' },
+              { text: 'Overdue', url: '/home/overdue-loans' },
+              { text: 'Loans', url: '/home/pending-loans' },
+              { text: 'Reservations', url: '/home/pending-reservations' },
+              { text: 'Payments', url: '/home/payments' },
               { text: 'Students', url: '/home/students' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>
