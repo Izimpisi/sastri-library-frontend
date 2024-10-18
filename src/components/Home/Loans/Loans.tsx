@@ -116,6 +116,7 @@ const paginationModel = { page: 0, pageSize: 5 };
 // Main Loan Component
 const Loan: React.FC = () => {
   const [loans, setLoans] = React.useState<LoanRow[]>([]);
+  const [refresh, triggerRefresh] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
@@ -141,20 +142,28 @@ const Loan: React.FC = () => {
     // Implement delete logic here
   };
 
-  React.useEffect(() => {
-    const fetchLoans = async () => {
-      try {
-        const response = await axiosInstance.get<LoanRow[]>('/loan');
-        setLoans(response.data); // Update state with fetched loans
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch loans');
-      } finally {
-        setLoading(false); // Stop loading spinner
-      }
-    };
+  const handleRefresh = (val: boolean) => {
+    triggerRefresh(val)
+  }
 
-    fetchLoans();
-  }, []);
+  React.useEffect(() => {
+    if (refresh) {
+      const fetchLoans = async () => {
+        try {
+          const response = await axiosInstance.get<LoanRow[]>('/loan');
+          setLoans(response.data);
+        } catch (err: any) {
+          setError(err.message || 'Failed to fetch loans');
+        } finally {
+          setLoading(false); // Stop loading spinner
+        }
+      };
+
+      fetchLoans();
+    }
+
+    handleRefresh(false)
+  }, [refresh]);
 
   return (
     <Container
@@ -190,6 +199,7 @@ const Loan: React.FC = () => {
         open={dialogOpen}
         onClose={handleClose}
         onCreate={handleCreateLoan}
+        handleRefresh={handleRefresh}
       />
     </Container>
   );

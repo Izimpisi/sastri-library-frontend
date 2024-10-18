@@ -1,6 +1,6 @@
 import React from "react"
 import Image from 'next/image'
-import LibraryBooks from "@/components/Home/Manage-Books/LibraryBooks"
+import LibraryBooks from "../../../components/Home/Manage-Books/LibraryBooks"
 
 export default function page() {
 

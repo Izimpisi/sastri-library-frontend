@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
         .typeError('Invalid date format'),
 });
 
-const NewLoanDialog = ({ open, onClose, onCreate }) => {
+const NewLoanDialog = ({ open, onClose, onCreate, handleRefresh }) => {
     const [selectedBook, setSelectedBook] = React.useState<Book>(null);
     const [searchResults, setSearchResults] = React.useState([]);
     const [dateDue, setDateDue] = React.useState<Dayjs | null>(null);
@@ -65,9 +65,16 @@ const NewLoanDialog = ({ open, onClose, onCreate }) => {
     });
 
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (Object.keys(selectedBook).length > 0) {
             console.log({ dateDue, id: selectedBook.bookId })
+            try {
+                await axiosInstance.post("/loan", { bookId: selectedBook.bookId, dueDate: dateDue })
+                setSelectedBook(null);
+                handleRefresh(true)
+            } catch (e) {
+                console.log(e)
+            }
         }
         reset(); // Reset the form after submission
         onClose(); // Close the dialog

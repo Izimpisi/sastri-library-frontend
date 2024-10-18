@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
-import axiosInstance from '@/lib/axiosInstance';
+import axiosInstance from '../../../lib/axiosInstance';
 import Link from 'next/link';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, TextField, Box, Typography, Container, Paper, Card, CardMedia, CardContent, Breadcrumbs } from '@mui/material';
