@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import axiosInstance from '../../../lib/axiosInstance';
 import Link from 'next/link';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, IconButton, Stack, Typography, Container, Paper, Card, CardMedia, CardContent, Breadcrumbs } from '@mui/material';
+import { Button, IconButton, Stack, Typography, Container, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Breadcrumbs } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -20,9 +20,9 @@ interface ReservationRow {
     isbn?: number;
     approved?: boolean;
     message?: string;
-  }
+}
 
-  
+
 const ReservationsAdmin = () => {
     const [reservations, setReservations] = React.useState<ReservationRow[]>([]);
     const [refresh, triggerRefresh] = React.useState<boolean>(true);
@@ -70,6 +70,14 @@ const ReservationsAdmin = () => {
         handleRefresh(false)
     }, [refresh]);
 
+    const handleApproveReservation = async (id: any) => {
+        try {
+            await axiosInstance.post(`/reservation/${id}/approve`); // Call the API
+            triggerRefresh(true)
+        } catch (error) {
+            console.error(error); // Handle error
+        }
+    };
 
     const columns: GridColDef[] = [
         { field: 'firstName', headerName: 'User', width: 130 },
@@ -106,26 +114,57 @@ const ReservationsAdmin = () => {
         }
         ,
         {
-          field: 'actions',
-          headerName: 'Actions',
-          sortable: false,
-          width: 90,
-          renderCell: (params: GridRenderCellParams) => (
-            <Stack direction="row" spacing={1}>
-              <IconButton
-                color="primary"
-              //onClick={() => handleEdit(params.row.id)}
-              >
-                <CheckCircleOutlineIcon />
-              </IconButton>
-              <IconButton
-                color="error"
-              //onClick={() => handleDelete(params.row.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Stack>
-          ),
+            field: 'actions',
+            headerName: 'Actions',
+            sortable: false,
+            width: 90,
+            renderCell: (params: GridRenderCellParams) => {
+                const [openDialog, setOpenDialog] = React.useState(false);
+                const { id, approved, active } = params.row; 
+
+                const handleLocalApproveReservation = async (id: number) => {
+                    await handleApproveReservation(id);
+                    setOpenDialog(false);
+                }
+
+
+                return (
+                    <>
+                        <Stack direction="row" spacing={1}>
+                            {!approved ? (
+                                <IconButton
+                                    color="primary"
+                                    onClick={() => setOpenDialog(true)}
+                                >
+                                    <CheckCircleOutlineIcon />
+                                </IconButton>
+                            ) : null}
+
+                            {!active ? <IconButton
+                                color="error"
+                            //onClick={() => handleDelete(loanId)} // Pass loanId to handleDelete
+                            >
+                                <DeleteIcon />
+                            </IconButton> : null}
+                        </Stack>
+                        {/* Confirmation Dialog */}
+                        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                            <DialogTitle>Confirm Approval</DialogTitle>
+                            <DialogContent>
+                                Are you sure you want to approve this Reservation?
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenDialog(false)} color="secondary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={(() => handleLocalApproveReservation(id))} color="primary" startIcon={<CheckCircleOutlineIcon />}>
+                                    Approve
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </>
+                )
+            }
         },
     ];
 
@@ -152,9 +191,9 @@ const paginationModel = { page: 0, pageSize: 5 };
 interface DataTableProps {
     reservations: ReservationRow[];
     columns: GridColDef[];
-  }
-  
-export const  DataTable: React.FC<DataTableProps> = ({ reservations, columns}) => {
+}
+
+export const DataTable: React.FC<DataTableProps> = ({ reservations, columns }) => {
 
     function handleClick(event) {
         event.preventDefault();
