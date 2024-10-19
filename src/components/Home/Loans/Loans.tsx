@@ -31,7 +31,6 @@ interface LoanRow {
   message?: string;
 }
 
-// Loan columns definition for DataGrid
 const columns: GridColDef[] = [
   { field: 'isbn', headerName: 'ISBN', width: 130 },
   { field: 'title', headerName: 'Book Title', width: 200 },

@@ -121,6 +121,7 @@ export default function DrawerAppBar() {
               { text: 'Overdue', url: '/home/overdue' },
               { text: 'Book Loans', url: '/home/loans' },
               { text: 'Book Reservations', url: '/home/reservations' },
+              { text: 'Bills', url: '/home/bills' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>
                 <ListItem disablePadding>
@@ -165,7 +166,7 @@ export default function DrawerAppBar() {
               { text: 'Overdue', url: '/home/overdue-loans' },
               { text: 'Loans', url: '/home/pending-loans' },
               { text: 'Reservations', url: '/home/pending-reservations' },
-              { text: 'Payments', url: '/home/payments' },
+              { text: 'Bills', url: '/home/admin-bills' },
               { text: 'Students', url: '/home/students' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>

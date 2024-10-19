@@ -57,7 +57,7 @@ const AdminLoan: React.FC = () => {
     };
 
     const columns: GridColDef[] = [
-        // { field: 'isbn', headerName: 'ISBN', width: 130 },
+        { field: 'firstName', headerName: 'User', width: 120 },
         { field: 'title', headerName: 'Book Title', width: 200 },
         { field: 'author', headerName: 'Author', width: 150 },
         {
@@ -86,11 +86,6 @@ const AdminLoan: React.FC = () => {
             valueGetter: (params: any) => {
                 return params ? new Date(params) : null;
             },
-        },
-        {
-            field: 'firstName',
-            headerName: 'User',
-            width: 120,
         },
         {
             field: 'approved',
