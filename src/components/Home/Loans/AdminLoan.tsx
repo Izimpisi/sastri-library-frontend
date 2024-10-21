@@ -18,6 +18,7 @@ import {
     Breadcrumbs
 } from '@mui/material';
 import axiosInstance from '../../../lib/axiosInstance';
+import { useDialog } from '../../../lib/GlobalDialog';
 
 // Define the row data type
 interface LoanRow {
@@ -45,6 +46,16 @@ const AdminLoan: React.FC = () => {
     const [error, setError] = React.useState<string | null>(null);
     const router = useRouter();
 
+    const { showDialog } = useDialog();
+
+    const handleLoanAction = (message: string) => {
+        const isLoaned = true; // Simulating condition
+
+        if (isLoaned) {
+            showDialog(message);
+        }
+    };
+
     const [dialogOpen, setDialogOpen] = React.useState(false);
 
     const handleApproveLoan = async (loanId: any) => {
@@ -52,6 +63,7 @@ const AdminLoan: React.FC = () => {
             await axiosInstance.post(`/loan/${loanId}/approve`); // Call the API
             triggerRefresh(true)
         } catch (error) {
+            handleLoanAction(error.response.data);
             console.error(error); // Handle error
         }
     };

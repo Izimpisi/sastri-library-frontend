@@ -8,6 +8,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, IconButton, Stack, Typography, Container, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Breadcrumbs } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDialog } from '../../../lib/GlobalDialog';
 
 // Define the row data type
 interface ReservationRow {
@@ -29,6 +30,16 @@ const ReservationsAdmin = () => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const [error, setError] = React.useState<string | null>(null);
     const router = useRouter();
+    
+    const { showDialog } = useDialog();
+
+    const handleLoanAction = (message: string) => {
+        const isLoaned = true; // Simulating condition
+
+        if (isLoaned) {
+            showDialog(message);
+        }
+    };
 
     const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -75,6 +86,7 @@ const ReservationsAdmin = () => {
             await axiosInstance.post(`/reservation/${id}/approve`); // Call the API
             triggerRefresh(true)
         } catch (error) {
+            handleLoanAction(error.response.data)
             console.error(error); // Handle error
         }
     };

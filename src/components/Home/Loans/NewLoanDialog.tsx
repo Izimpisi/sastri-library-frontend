@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import WrapDatePicker from './DatePicker';
 import SearchBarWithFilter from './FilterSeachbar';
 import axiosInstance from '../../../lib/axiosInstance';
+import { useDialog } from '../../../lib/GlobalDialog';
 
 export interface Book {
     bookId: number;
@@ -37,6 +38,16 @@ const NewLoanDialog = ({ open, onClose, onCreate, handleRefresh }) => {
     const [selectedBook, setSelectedBook] = React.useState<Book>(null);
     const [searchResults, setSearchResults] = React.useState([]);
     const [dateDue, setDateDue] = React.useState<Dayjs | null>(null);
+
+    const { showDialog } = useDialog();
+
+    const handleLoanAction = (message: string) => {
+        const isLoaned = true; // Simulating condition
+
+        if (isLoaned) {
+            showDialog(message);
+        }
+    };
 
 
     const handleSearch = async (filter: string, searchValue: string) => {
@@ -67,13 +78,13 @@ const NewLoanDialog = ({ open, onClose, onCreate, handleRefresh }) => {
 
     const onSubmit = async () => {
         if (Object.keys(selectedBook).length > 0) {
-            console.log({ dateDue, id: selectedBook.bookId })
             try {
                 await axiosInstance.post("/loan", { bookId: selectedBook.bookId, dueDate: dateDue })
                 setSelectedBook(null);
                 handleRefresh(true)
             } catch (e) {
                 console.log(e)
+                handleLoanAction(e.response.data)
             }
         }
         reset(); // Reset the form after submission

@@ -32,6 +32,15 @@ const AdminBills = () => {
             valueFormatter: (params) => `R ${params}`,
         },
         {
+            field: 'dueDate',
+            headerName: 'Due Date',
+            width: 130,
+            type: 'date',
+            valueGetter: (params: any) => {
+                return params ? new Date(params) : null;
+            },
+        },
+        {
             field: 'daysOutstanding',
             headerName: 'Days Outstanding',
             width: 130,

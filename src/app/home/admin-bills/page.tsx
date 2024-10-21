@@ -1,12 +1,12 @@
 import React from "react"
 import Image from 'next/image'
-import Bills from "../../../components/Home/Bills/Bills"
+import AdminBills from "../../../components/Home/Bills/AdminBills"
 
 export default function page() {
 
     return (
         <main className="main-manage-bills">
-            <Bills />
+            <AdminBills />
         </main>
     )
 }

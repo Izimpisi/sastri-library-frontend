@@ -6,6 +6,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import SearchBarWithFilter from '../Loans/FilterSeachbar';
 import axiosInstance from '../../../lib/axiosInstance';
+import { useDialog } from '../../../lib/GlobalDialog';
 
 export interface Book {
     bookId: number;
@@ -21,6 +22,15 @@ const NewReservationDialog = ({ open, onClose, handleRefresh }) => {
     const [selectedBook, setSelectedBook] = React.useState<Book>(null);
     const [searchResults, setSearchResults] = React.useState([]);
 
+    const { showDialog } = useDialog();
+
+    const handleLoanAction = (message: string) => {
+        const isLoaned = true; // Simulating condition
+
+        if (isLoaned) {
+            showDialog(message);
+        }
+    };
 
     const handleSearch = async (filter: string, searchValue: string) => {
         try {
@@ -51,6 +61,7 @@ const NewReservationDialog = ({ open, onClose, handleRefresh }) => {
                 setSelectedBook(null);
                 handleRefresh(true)
             } catch (e) {
+                handleLoanAction(e.response.data)
                 console.log(e)
             }
         }

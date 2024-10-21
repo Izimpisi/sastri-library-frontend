@@ -1,10 +1,13 @@
 import React from 'react'
 import Loan from '../../../components/Home/Loans/Loans'
+import { DialogProvider } from '../../../lib/GlobalDialog'
 
 function page() {
     return (
         <main className="main-loan-books">
-            <Loan />
+            <DialogProvider>
+                <Loan />
+            </DialogProvider>
         </main>
     )
 }

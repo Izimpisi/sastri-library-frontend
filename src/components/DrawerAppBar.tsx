@@ -118,7 +118,6 @@ export default function DrawerAppBar() {
           <Divider />
           <List>
             {[
-              { text: 'Overdue', url: '/home/overdue' },
               { text: 'Book Loans', url: '/home/loans' },
               { text: 'Book Reservations', url: '/home/reservations' },
               { text: 'Bills', url: '/home/bills' },
@@ -163,7 +162,6 @@ export default function DrawerAppBar() {
           <Divider />
           <List>
             {[
-              { text: 'Overdue', url: '/home/overdue-loans' },
               { text: 'Loans', url: '/home/pending-loans' },
               { text: 'Reservations', url: '/home/pending-reservations' },
               { text: 'Bills', url: '/home/admin-bills' },
