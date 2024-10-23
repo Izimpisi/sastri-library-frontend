@@ -6,7 +6,7 @@ import HomeClient from "../../components/Home/Home"
 export default function Home() {
     return (
         <React.Fragment>
-            <main>
+            <main className="main-home">
                 <HomeClient />
             </main>
         </React.Fragment>

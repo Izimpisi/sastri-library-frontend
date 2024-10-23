@@ -22,6 +22,8 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
 import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import LockIcon from '@mui/icons-material/Lock';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import axiosInstance from '../lib/axiosInstance';
 import Link from 'next/link';
@@ -38,6 +40,7 @@ export default function DrawerAppBar() {
   const [state, setState] = React.useState<{ left: boolean }>({ left: false });
 
   const [userProfile, setUserProfile] = React.useState<UserProfile>({});
+
 
   React.useEffect(() => {
     async function execute() {
@@ -56,7 +59,7 @@ export default function DrawerAppBar() {
       try {
         const response = await fetchMe();
         setUserProfile(prevState => {
-          if(response.role === "Admin") {
+          if (response.role === "Admin") {
             response.role = "Administrator"
           }
           return response
@@ -72,17 +75,17 @@ export default function DrawerAppBar() {
 
   const toggleDrawer =
     (open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
+      (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+          event.type === 'keydown' &&
+          ((event as React.KeyboardEvent).key === 'Tab' ||
+            (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+          return;
+        }
 
-      setState({ ...state, left: open });
-    };
+        setState({ ...state, left: open });
+      };
 
   const list = () => (
     <Box
@@ -95,7 +98,7 @@ export default function DrawerAppBar() {
         <>
           <List>
             {[
-              { text: 'New Books', url: '/home/new-books' },
+              { text: 'Index Books', url: '/home/new-books' },
             ].map((page, index) => (
               <Link href={page.url} key={page.text}>
                 <ListItem disablePadding>
@@ -184,9 +187,27 @@ export default function DrawerAppBar() {
     </Box>
   );
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    try {
+      axiosInstance.post("/account/logout");
+      router.push("/auth/login");
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <div>
-      <AppBar component="nav" sx={{ backgroundColor: '#a6e6e2d4', color: 'rgb(16 4 4)' }}>
+      <AppBar component="nav" sx={{ backgroundColor: '#a6e6e2', color: 'rgb(16 4 4)' }}>
         <Toolbar>
           <IconButton onClick={toggleDrawer(true)} color="inherit" aria-label="open drawer">
             <svg
@@ -227,15 +248,26 @@ export default function DrawerAppBar() {
             )}
           </Stack>
 
-          <IconButton>
-            <NotificationsActiveOutlinedIcon sx={{ color: 'black' }} />
-          </IconButton>
-          <IconButton>
-            <AccountCircleOutlinedIcon sx={{ color: 'black' }} />
-          </IconButton>
+          <div>
+            <IconButton onClick={handleClick}>
+              <AccountCircleOutlinedIcon sx={{ color: 'black' }} />
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            </Menu>
+          </div>
+
           <Typography component="span" sx={{ paddingTop: 1 }} gutterBottom>
-              {userProfile.firstName + " " + userProfile.lastName}
-            </Typography>
+            {userProfile.firstName + " " + userProfile.lastName}
+          </Typography>
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={state.left} onClose={toggleDrawer(false)}>

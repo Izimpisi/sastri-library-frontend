@@ -5,7 +5,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
@@ -19,8 +19,8 @@ import {
 } from '@mui/material';
 import axiosInstance from '../../../lib/axiosInstance';
 import { useDialog } from '../../../lib/GlobalDialog';
+import BookIcon from '@mui/icons-material/Book';
 
-// Define the row data type
 interface LoanRow {
     loanId?: number;
     loanDate: string; // Use string to hold date in 'YYYY-MM-DD' format
@@ -60,18 +60,38 @@ const AdminLoan: React.FC = () => {
 
     const handleApproveLoan = async (loanId: any) => {
         try {
-            await axiosInstance.post(`/loan/${loanId}/approve`); // Call the API
+            await axiosInstance.post(`/loan/${loanId}/approve`);
             triggerRefresh(true)
         } catch (error) {
             handleLoanAction(error.response.data);
-            console.error(error); // Handle error
+            console.error(error);
+        }
+    };
+
+    const handleReturnLoan = async (loanId: any) => {
+        try {
+            await axiosInstance.post(`/loan/${loanId}/return`);
+            triggerRefresh(true)
+        } catch (error) {
+            handleLoanAction(error.response.data);
+            console.error(error);
+        }
+    };
+
+    const handleDeleteLoan = async (loanId: any) => {
+        try {
+            await axiosInstance.delete(`/loan/${loanId}`);
+            triggerRefresh(true)
+        } catch (error) {
+            handleLoanAction(error.response.data);
+            console.error(error);
         }
     };
 
     const columns: GridColDef[] = [
         { field: 'firstName', headerName: 'User', width: 120 },
         { field: 'title', headerName: 'Book Title', width: 200 },
-        { field: 'author', headerName: 'Author', width: 150 },
+        { field: 'message', headerName: 'Status', width: 150 },
         {
             field: 'loanDate',
             headerName: 'Loan Date',
@@ -113,11 +133,23 @@ const AdminLoan: React.FC = () => {
             width: 90,
             renderCell: (params: GridRenderCellParams) => {
                 const [openDialog, setOpenDialog] = React.useState(false);
+                const [openReturnDialog, setOpenReturnDialog] = React.useState(false);
+                const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
                 const { loanId, approved, active } = params.row; // Destructure loanId and approved from the row
 
                 const handleLocalApproveLoan = async (loanId: number) => {
                     await handleApproveLoan(loanId);
                     setOpenDialog(false);
+                }
+
+                const handleLocalReturnLoan = async (loanId: number) => {
+                    await handleReturnLoan(loanId);
+                    setOpenReturnDialog(false);
+                }
+
+                const handleLocalDeleteLoan = async (loanId: number) => {
+                    await handleDeleteLoan(loanId);
+                    setOpenDeleteDialog(false);
                 }
 
 
@@ -133,14 +165,21 @@ const AdminLoan: React.FC = () => {
                                 </IconButton>
                             ) : null}
 
-                            {!active ? <IconButton
+                            {active ? <IconButton
                                 color="error"
-                            //onClick={() => handleDelete(loanId)} // Pass loanId to handleDelete
+                                onClick={() => setOpenReturnDialog(true)}
                             >
-                                <DeleteIcon />
-                            </IconButton> : null}
+                                <BookIcon />
+                            </IconButton> : <IconButton
+                                color="error"
+                                onClick={() => setOpenDeleteDialog(true)}
+                            >
+                                <DeleteForeverIcon />
+                            </IconButton>}
                         </Stack>
-                        {/* Confirmation Dialog */}
+                            
+                        //CONFIRM APPROVAL DIALOG  
+
                         <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                             <DialogTitle>Confirm Approval</DialogTitle>
                             <DialogContent>
@@ -152,6 +191,40 @@ const AdminLoan: React.FC = () => {
                                 </Button>
                                 <Button onClick={(() => handleLocalApproveLoan(loanId))} color="primary" startIcon={<CheckCircleOutlineIcon />}>
                                     Approve
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
+                                //THE RETURN DIALOG
+
+                        <Dialog open={openReturnDialog} onClose={() => setOpenReturnDialog(false)}>
+                            <DialogTitle>Confirm Return</DialogTitle>
+                            <DialogContent>
+                                Are you sure you want to process the return of this book.
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenReturnDialog(false)} color="secondary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={(() => handleLocalReturnLoan(loanId))} color="primary" startIcon={<CheckCircleOutlineIcon />}>
+                                    Process
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
+                        //DELETE LOAN DIALOG
+
+                        <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+                            <DialogTitle>Confirm Delete</DialogTitle>
+                            <DialogContent>
+                                Are you sure you want to delete this loan.
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenDeleteDialog(false)} color="secondary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={(() => handleLocalDeleteLoan(loanId))} color="primary" startIcon={<CheckCircleOutlineIcon />}>
+                                    Delete
                                 </Button>
                             </DialogActions>
                         </Dialog>

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, IconButton, Stack, Typography, Container, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Breadcrumbs } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useDialog } from '../../../lib/GlobalDialog';
 
 // Define the row data type
@@ -30,7 +30,7 @@ const ReservationsAdmin = () => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const [error, setError] = React.useState<string | null>(null);
     const router = useRouter();
-    
+
     const { showDialog } = useDialog();
 
     const handleLoanAction = (message: string) => {
@@ -71,7 +71,7 @@ const ReservationsAdmin = () => {
                 } catch (err: any) {
                     setError(err.message || 'Failed to fetch loans');
                 } finally {
-                    setLoading(false); // Stop loading spinner
+                    setLoading(false); 
                 }
             };
 
@@ -83,11 +83,21 @@ const ReservationsAdmin = () => {
 
     const handleApproveReservation = async (id: any) => {
         try {
-            await axiosInstance.post(`/reservation/${id}/approve`); // Call the API
+            await axiosInstance.post(`/reservation/${id}/approve`); 
             triggerRefresh(true)
         } catch (error) {
             handleLoanAction(error.response.data)
             console.error(error); // Handle error
+        }
+    };
+
+    const handleDeleteReservation = async (id: any) => {
+        try {
+            await axiosInstance.delete(`/reservation/${id}`);
+            triggerRefresh(true)
+        } catch (error) {
+            handleLoanAction(error.response.data);
+            console.error(error);
         }
     };
 
@@ -132,11 +142,17 @@ const ReservationsAdmin = () => {
             width: 90,
             renderCell: (params: GridRenderCellParams) => {
                 const [openDialog, setOpenDialog] = React.useState(false);
-                const { id, approved, active } = params.row; 
+                const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+                const { id, approved, active } = params.row;
 
                 const handleLocalApproveReservation = async (id: number) => {
                     await handleApproveReservation(id);
                     setOpenDialog(false);
+                }
+
+                const handleLocalDeleteReservation = async (id: number) => {
+                    await handleDeleteReservation(id);
+                    setOpenDeleteDialog(false);
                 }
 
 
@@ -154,12 +170,13 @@ const ReservationsAdmin = () => {
 
                             {!active ? <IconButton
                                 color="error"
-                            //onClick={() => handleDelete(loanId)} // Pass loanId to handleDelete
-                            >
-                                <DeleteIcon />
+                                onClick={() => setOpenDeleteDialog(true)}                            >
+                                <DeleteForeverIcon />
                             </IconButton> : null}
                         </Stack>
-                        {/* Confirmation Dialog */}
+
+                        
+
                         <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                             <DialogTitle>Confirm Approval</DialogTitle>
                             <DialogContent>
@@ -171,6 +188,23 @@ const ReservationsAdmin = () => {
                                 </Button>
                                 <Button onClick={(() => handleLocalApproveReservation(id))} color="primary" startIcon={<CheckCircleOutlineIcon />}>
                                     Approve
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
+                        
+
+                        <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+                            <DialogTitle>Confirm Deletion</DialogTitle>
+                            <DialogContent>
+                                Are you sure you want to Delete this Reservation?
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenDeleteDialog(false)} color="secondary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={(() => handleLocalDeleteReservation(id))} color="primary" startIcon={<CheckCircleOutlineIcon />}>
+                                    Delete
                                 </Button>
                             </DialogActions>
                         </Dialog>
