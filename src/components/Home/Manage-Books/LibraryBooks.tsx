@@ -82,8 +82,14 @@ export function DataTable() {
     const handleOpen = () => setDialogOpen(true);
     const handleClose = () => setDialogOpen(false);
 
-    const handleAddBook = (data: any) => {
-        console.log(data);
+    const handleAddBook = async (data: any) => {
+        try {
+            const newBook = await axiosInstance.post("/books/add", data);
+            setSearchResults(newBook);
+            handleRefresh(true);
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     const handleRefresh = (val: boolean) => {
@@ -150,7 +156,7 @@ export function DataTable() {
                 open={dialogOpen}
                 onClose={handleClose}
                 onCreate={handleAddBook}
-                handleRefresh={handleRefresh} />
+            />
         </>
     );
 }

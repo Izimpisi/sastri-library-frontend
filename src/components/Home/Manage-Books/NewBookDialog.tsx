@@ -18,22 +18,26 @@ const validationSchema = Yup.object().shape({
         .required('ISBN is required.')
         .length(13, 'ISBN must be 13 characters long.')
         .matches(/^\d{13}$/, 'ISBN must be only numeric digits.'),
-    datePublished: Yup.number()
+    date_Published: Yup.string()
         .required('Date published is required.')
-        .min(1900, 'Year must be 1900 or later.')
-        .max(new Date().getFullYear(), `Year cannot be in the future.`)
+        .matches(/^\d{4}$/, 'Year must be a 4-digit number.')
+        .test('is-valid-year', 'Year must be 1900 or later and cannot be in the future.',
+            value => {
+                const year = parseInt(value, 10);
+                return year >= 1900 && year <= new Date().getFullYear();
+            }
+        ),
 });
 
-const NewBookDialog = ({ open, onClose, onCreate, handleRefresh }) => {
+const NewBookDialog = ({ open, onClose, onCreate }) => {
 
     const { control, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(validationSchema)
     });
 
     const onSubmit = async (data) => {
-        console.log(data)
         onCreate(data);
-        reset();
+        // reset();
         onClose();
     };
 
@@ -104,16 +108,16 @@ const NewBookDialog = ({ open, onClose, onCreate, handleRefresh }) => {
                         </FormControl>
 
                         <FormControl fullWidth margin="normal">
-                            <FormLabel>Date Published (Year)</FormLabel>
+                            <FormLabel>Date Published</FormLabel>
                             <Controller
-                                name="datePublished"
+                                name="date_Published"
                                 control={control}
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
                                         type="number"
-                                        error={!!errors.datePublished}
-                                        helperText={errors.datePublished ? errors.datePublished.message : ''}
+                                        error={!!errors.date_Published}
+                                        helperText={errors.date_Published ? errors.date_Published.message : ''}
                                     />
                                 )}
                             />
@@ -122,6 +126,9 @@ const NewBookDialog = ({ open, onClose, onCreate, handleRefresh }) => {
                     <Divider sx={{ my: 2 }} />
                     <Button type="submit" color="primary" variant="contained">
                         Create Book Record
+                    </Button>
+                    <Button className='ml-2' color="primary" onClick={onClose} variant="contained">
+                        Cancel
                     </Button>
                 </form>
             </DialogContent>
